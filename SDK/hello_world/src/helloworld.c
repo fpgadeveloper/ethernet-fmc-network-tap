@@ -47,6 +47,7 @@
 
 #include <stdio.h>
 #include "platform.h"
+#include "xil_printf.h"
 #include "xemacps.h"
 
 #define XEMACPS_GMII2RGMII_SPEED1000_FD		0x140

@@ -86,7 +86,7 @@ print_ip_settings(struct ip_addr *ip, struct ip_addr *mask, struct ip_addr *gw)
 	print_ip("Gateway : ", gw);
 }
 
-#if defined (__arm__) || defined(__aarch64__)
+#if defined (__arm__) && !defined (ARMR5)
 #if XPAR_GIGE_PCS_PMA_SGMII_CORE_PRESENT == 1 || XPAR_GIGE_PCS_PMA_1000BASEX_CORE_PRESENT == 1
 int ProgramSi5324(void);
 int ProgramSfpPhy(void);
@@ -123,11 +123,6 @@ static void SetUpSLCRDivisors(unsigned int mac_baseaddr, signed int speed);
 int main()
 {
 	int status;
-
-#if __aarch64__
-	Xil_DCacheDisable();
-#endif
-
 	struct ip_addr ipaddr, netmask, gw;
 
 	/* the mac address of the board. this should be unique per board */
@@ -135,7 +130,7 @@ int main()
 	{ 0x00, 0x0a, 0x35, 0x00, 0x01, 0x02 };
 
 	echo_netif = &server_netif;
-#if defined (__arm__) || defined(__aarch64__)
+#if defined (__arm__) && !defined (ARMR5)
 #if XPAR_GIGE_PCS_PMA_SGMII_CORE_PRESENT == 1 || XPAR_GIGE_PCS_PMA_1000BASEX_CORE_PRESENT == 1
 	ProgramSi5324();
 	ProgramSfpPhy();
@@ -143,7 +138,6 @@ int main()
 #endif
 
 	init_platform();
-
 
 #if LWIP_DHCP==1
     ipaddr.addr = 0;

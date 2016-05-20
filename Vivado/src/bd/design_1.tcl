@@ -1,7 +1,7 @@
 ################################################################
 # Check if script is running in correct Vivado version.
 ################################################################
-set scripts_vivado_version 2015.4
+set scripts_vivado_version 2016.1
 set current_vivado_version [version -short]
 
 if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
@@ -157,11 +157,11 @@ endgroup
 
 # FIFOs for GMII loopback
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.0 fifo_generator_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.1 fifo_generator_0
 set_property -dict [list CONFIG.Fifo_Implementation {Independent_Clocks_Block_RAM} CONFIG.Input_Data_Width {10} CONFIG.Valid_Flag {true} CONFIG.Write_Acknowledge_Flag {false} CONFIG.Output_Data_Width {10} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.Full_Flags_Reset_Value {1} CONFIG.Programmable_Full_Type {Single_Programmable_Full_Threshold_Constant} CONFIG.Full_Threshold_Assert_Value {600} CONFIG.Full_Threshold_Negate_Value {599} CONFIG.Programmable_Empty_Type {Single_Programmable_Empty_Threshold_Constant} CONFIG.Empty_Threshold_Assert_Value {400} CONFIG.Empty_Threshold_Negate_Value {401}] [get_bd_cells fifo_generator_0]
 endgroup
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.0 fifo_generator_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.1 fifo_generator_1
 set_property -dict [list CONFIG.Fifo_Implementation {Independent_Clocks_Block_RAM} CONFIG.Input_Data_Width {10} CONFIG.Valid_Flag {true} CONFIG.Write_Acknowledge_Flag {false} CONFIG.Output_Data_Width {10} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.Full_Flags_Reset_Value {1} CONFIG.Programmable_Full_Type {Single_Programmable_Full_Threshold_Constant} CONFIG.Full_Threshold_Assert_Value {600} CONFIG.Full_Threshold_Negate_Value {599} CONFIG.Programmable_Empty_Type {Single_Programmable_Empty_Threshold_Constant} CONFIG.Empty_Threshold_Assert_Value {400} CONFIG.Empty_Threshold_Negate_Value {401}] [get_bd_cells fifo_generator_1]
 endgroup
 
