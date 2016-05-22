@@ -1,16 +1,6 @@
 ################################################################
-# Check if script is running in correct Vivado version.
+# Block diagram build script
 ################################################################
-set scripts_vivado_version 2016.1
-set current_vivado_version [version -short]
-
-if { [string first $scripts_vivado_version $current_vivado_version] == -1 } {
-   puts ""
-   puts "ERROR: This script was generated using Vivado <$scripts_vivado_version> and is being run in <$current_vivado_version> of Vivado. Please run the script in Vivado <$scripts_vivado_version> then open the design in Vivado <$current_vivado_version>. Upgrade the design by running \"Tools => Report => Report IP Status...\", then run write_bd_tcl to create an updated script."
-
-   return 1
-}
-
 set design_name design_1
 
 # CHECKING IF PROJECT EXISTS
@@ -50,7 +40,7 @@ current_bd_instance $parentObj
 
 # Add the Processor System and apply board preset
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7:5.5 processing_system7_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7 processing_system7_0
 endgroup
 apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells processing_system7_0]
 
@@ -64,15 +54,15 @@ connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins process
 
 # Add the NOT gate for reset signal
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 util_vector_logic_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic util_vector_logic_0
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not}] [get_bd_cells util_vector_logic_0]
 endgroup
 connect_bd_net [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins util_vector_logic_0/Op1]
 
 # Add the GMII-to-RGMIIs
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.0 gmii_to_rgmii_0
-create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii:4.0 gmii_to_rgmii_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii gmii_to_rgmii_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii gmii_to_rgmii_1
 endgroup
 
 # GMII-to-RGMII0 set with PHY address 7 and shared logic
@@ -95,7 +85,7 @@ endgroup
 
 # PHY RESETs
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_reduced_logic:2.0 util_reduced_logic_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_reduced_logic util_reduced_logic_0
 endgroup
 startgroup
 set_property -dict [list CONFIG.C_SIZE {1}] [get_bd_cells util_reduced_logic_0]
@@ -107,7 +97,7 @@ connect_bd_net [get_bd_pins /util_reduced_logic_0/Res] [get_bd_ports reset_port_
 endgroup
 
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_reduced_logic:2.0 util_reduced_logic_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_reduced_logic util_reduced_logic_1
 endgroup
 startgroup
 set_property -dict [list CONFIG.C_SIZE {1}] [get_bd_cells util_reduced_logic_1]
@@ -140,7 +130,7 @@ connect_bd_net [get_bd_pins gmii_to_rgmii_1/rx_reset] [get_bd_pins util_vector_l
 # Create Ethernet FMC reference clock output enable and frequency select
 
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 ref_clk_oe
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant ref_clk_oe
 endgroup
 startgroup
 create_bd_port -dir O -from 0 -to 0 ref_clk_oe
@@ -148,7 +138,7 @@ connect_bd_net [get_bd_pins /ref_clk_oe/dout] [get_bd_ports ref_clk_oe]
 endgroup
 
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant:1.1 ref_clk_fsel
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant ref_clk_fsel
 endgroup
 startgroup
 create_bd_port -dir O -from 0 -to 0 ref_clk_fsel
@@ -157,24 +147,24 @@ endgroup
 
 # FIFOs for GMII loopback
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.1 fifo_generator_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator fifo_generator_0
 set_property -dict [list CONFIG.Fifo_Implementation {Independent_Clocks_Block_RAM} CONFIG.Input_Data_Width {10} CONFIG.Valid_Flag {true} CONFIG.Write_Acknowledge_Flag {false} CONFIG.Output_Data_Width {10} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.Full_Flags_Reset_Value {1} CONFIG.Programmable_Full_Type {Single_Programmable_Full_Threshold_Constant} CONFIG.Full_Threshold_Assert_Value {600} CONFIG.Full_Threshold_Negate_Value {599} CONFIG.Programmable_Empty_Type {Single_Programmable_Empty_Threshold_Constant} CONFIG.Empty_Threshold_Assert_Value {400} CONFIG.Empty_Threshold_Negate_Value {401}] [get_bd_cells fifo_generator_0]
 endgroup
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator:13.1 fifo_generator_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator fifo_generator_1
 set_property -dict [list CONFIG.Fifo_Implementation {Independent_Clocks_Block_RAM} CONFIG.Input_Data_Width {10} CONFIG.Valid_Flag {true} CONFIG.Write_Acknowledge_Flag {false} CONFIG.Output_Data_Width {10} CONFIG.Reset_Type {Asynchronous_Reset} CONFIG.Full_Flags_Reset_Value {1} CONFIG.Programmable_Full_Type {Single_Programmable_Full_Threshold_Constant} CONFIG.Full_Threshold_Assert_Value {600} CONFIG.Full_Threshold_Negate_Value {599} CONFIG.Programmable_Empty_Type {Single_Programmable_Empty_Threshold_Constant} CONFIG.Empty_Threshold_Assert_Value {400} CONFIG.Empty_Threshold_Negate_Value {401}] [get_bd_cells fifo_generator_1]
 endgroup
 
 # FIFO resets (connected to link status of both GMII-to-RGMII blocks)
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 link_status_and_gate
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic link_status_and_gate
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1}] [get_bd_cells link_status_and_gate]
 connect_bd_net [get_bd_pins gmii_to_rgmii_0/link_status] [get_bd_pins link_status_and_gate/Op1]
 connect_bd_net [get_bd_pins gmii_to_rgmii_1/link_status] [get_bd_pins link_status_and_gate/Op2]
 
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 link_status_not_gate
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic link_status_not_gate
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not}] [get_bd_cells link_status_not_gate]
 connect_bd_net [get_bd_pins link_status_and_gate/Res] [get_bd_pins link_status_not_gate/Op1]
@@ -184,14 +174,14 @@ connect_bd_net [get_bd_pins fifo_generator_1/rst] [get_bd_pins link_status_not_g
 
 # Concats to combine GMII data, GMII valid and GMII error signals on the receive side
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat xlconcat_0
 endgroup
 set_property -dict [list CONFIG.IN0_WIDTH.VALUE_SRC USER CONFIG.IN1_WIDTH.VALUE_SRC USER] [get_bd_cells xlconcat_0]
 set_property -dict [list CONFIG.IN0_WIDTH {8}] [get_bd_cells xlconcat_0]
 set_property -dict [list CONFIG.NUM_PORTS {3}] [get_bd_cells xlconcat_0]
 
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat:2.1 xlconcat_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlconcat xlconcat_1
 endgroup
 set_property -dict [list CONFIG.IN0_WIDTH.VALUE_SRC USER CONFIG.IN1_WIDTH.VALUE_SRC USER] [get_bd_cells xlconcat_1]
 set_property -dict [list CONFIG.IN0_WIDTH {8}] [get_bd_cells xlconcat_1]
@@ -199,27 +189,27 @@ set_property -dict [list CONFIG.NUM_PORTS {3}] [get_bd_cells xlconcat_1]
 
 # Slices to split GMII data, GMII valid and GMII error signals on the transmit side
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_data_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice xlslice_data_0
 set_property -dict [list CONFIG.DIN_WIDTH {10} CONFIG.DIN_TO {0} CONFIG.DIN_FROM {7} CONFIG.DOUT_WIDTH {8}] [get_bd_cells xlslice_data_0]
 endgroup
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_error_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice xlslice_error_0
 set_property -dict [list CONFIG.DIN_WIDTH {10} CONFIG.DIN_TO {8} CONFIG.DIN_FROM {8} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_error_0]
 endgroup
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_valid_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice xlslice_valid_0
 set_property -dict [list CONFIG.DIN_WIDTH {10} CONFIG.DIN_TO {9} CONFIG.DIN_FROM {9} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_valid_0]
 endgroup
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_data_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice xlslice_data_1
 set_property -dict [list CONFIG.DIN_WIDTH {10} CONFIG.DIN_TO {0} CONFIG.DIN_FROM {7} CONFIG.DOUT_WIDTH {8}] [get_bd_cells xlslice_data_1]
 endgroup
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_error_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice xlslice_error_1
 set_property -dict [list CONFIG.DIN_WIDTH {10} CONFIG.DIN_TO {8} CONFIG.DIN_FROM {8} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_error_1]
 endgroup
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice:1.0 xlslice_valid_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlslice xlslice_valid_1
 set_property -dict [list CONFIG.DIN_WIDTH {10} CONFIG.DIN_TO {9} CONFIG.DIN_FROM {9} CONFIG.DOUT_WIDTH {1}] [get_bd_cells xlslice_valid_1]
 endgroup
 
@@ -256,46 +246,46 @@ connect_bd_net [get_bd_pins gmii_to_rgmii_1/gmii_tx_clk] [get_bd_pins fifo_gener
 
 # Logic for elastic buffers: OR gates
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 or_gate_wr_en_fifo_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic or_gate_wr_en_fifo_0
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {or}] [get_bd_cells or_gate_wr_en_fifo_0]
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 or_gate_rd_en_fifo_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic or_gate_rd_en_fifo_0
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {or}] [get_bd_cells or_gate_rd_en_fifo_0]
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 or_gate_wr_en_fifo_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic or_gate_wr_en_fifo_1
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {or}] [get_bd_cells or_gate_wr_en_fifo_1]
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 or_gate_rd_en_fifo_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic or_gate_rd_en_fifo_1
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {or}] [get_bd_cells or_gate_rd_en_fifo_1]
 
 # Logic for elastic buffers: NOT gates
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 not_gate_full_fifo_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic not_gate_full_fifo_0
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not}] [get_bd_cells not_gate_full_fifo_0]
 connect_bd_net [get_bd_pins fifo_generator_0/prog_full] [get_bd_pins not_gate_full_fifo_0/Op1]
 connect_bd_net [get_bd_pins not_gate_full_fifo_0/Res] [get_bd_pins or_gate_wr_en_fifo_0/Op1]
 connect_bd_net [get_bd_pins gmii_to_rgmii_0/gmii_rx_dv] [get_bd_pins or_gate_wr_en_fifo_0/Op2]
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 not_gate_full_fifo_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic not_gate_full_fifo_1
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not}] [get_bd_cells not_gate_full_fifo_1]
 connect_bd_net [get_bd_pins fifo_generator_1/prog_full] [get_bd_pins not_gate_full_fifo_1/Op1]
 connect_bd_net [get_bd_pins not_gate_full_fifo_1/Res] [get_bd_pins or_gate_wr_en_fifo_1/Op1]
 connect_bd_net [get_bd_pins gmii_to_rgmii_1/gmii_rx_dv] [get_bd_pins or_gate_wr_en_fifo_1/Op2]
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 not_gate_empty_fifo_0
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic not_gate_empty_fifo_0
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not}] [get_bd_cells not_gate_empty_fifo_0]
 connect_bd_net [get_bd_pins fifo_generator_0/prog_empty] [get_bd_pins not_gate_empty_fifo_0/Op1]
 connect_bd_net [get_bd_pins not_gate_empty_fifo_0/Res] [get_bd_pins or_gate_rd_en_fifo_0/Op1]
 connect_bd_net [get_bd_pins gmii_to_rgmii_1/gmii_tx_en] [get_bd_pins or_gate_rd_en_fifo_0/Op2]
 startgroup
-create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic:2.0 not_gate_empty_fifo_1
+create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic not_gate_empty_fifo_1
 endgroup
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not}] [get_bd_cells not_gate_empty_fifo_1]
 connect_bd_net [get_bd_pins fifo_generator_1/prog_empty] [get_bd_pins not_gate_empty_fifo_1/Op1]
