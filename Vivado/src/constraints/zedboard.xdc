@@ -1,3 +1,8 @@
+# Enable internal termination resistor on LVDS 125MHz ref_clk
+set_property DIFF_TERM TRUE [get_ports ref_clk_p]
+set_property DIFF_TERM TRUE [get_ports ref_clk_n]
+
+# Define I/O standards
 #set_property IOSTANDARD LVCMOS25 [get_ports mdio_io_port_3_mdc]
 #set_property IOSTANDARD LVCMOS25 [get_ports mdio_io_port_3_mdio_io]
 #set_property IOSTANDARD LVCMOS25 [get_ports reset_port_2]
