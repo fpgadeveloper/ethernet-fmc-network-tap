@@ -21,7 +21,7 @@ devices.
 
 ## Requirements
 
-* Vivado 2016.4
+* Vivado 2017.1
 * [Ethernet FMC](http://ethernetfmc.com "Ethernet FMC")
 * One of the above listed evaluation boards
 
