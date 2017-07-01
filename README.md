@@ -3,6 +3,16 @@ ethernet-fmc-network-tap
 
 Hackable FPGA based network tap based on the [ZedBoard](http://zedboard.org "ZedBoard") and the [Quad Gigabit Ethernet FMC](http://ethernetfmc.com "Ethernet FMC").
 
+## Requirements
+
+This project is designed for Vivado 2017.2. If you are using an older version of Vivado, then you *MUST* use an older version
+of this repository. Refer to the [list of commits](https://github.com/fpgadeveloper/ethernet-fmc-network-tap/commits/master "list of commits")
+to find links to the older versions of this repository.
+
+* Vivado 2017.2
+* [Ethernet FMC](http://ethernetfmc.com "Ethernet FMC")
+* One of the above listed evaluation boards
+
 ## Supported boards
 
 * Zynq-7000 [ZedBoard](http://zedboard.org "ZedBoard")
@@ -18,12 +28,6 @@ an Ethernet cable. It is a work that is still under development.
 The design in it's present state implements a pass-through between PORT0 and PORT1 of the Ethernet FMC.
 The pass-through is fully functional and can be tested by connecting ports 0 and 1 to separate Ethernet
 devices.
-
-## Requirements
-
-* Vivado 2017.2
-* [Ethernet FMC](http://ethernetfmc.com "Ethernet FMC")
-* One of the above listed evaluation boards
 
 ## Build instructions
 
