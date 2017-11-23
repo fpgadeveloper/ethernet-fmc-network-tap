@@ -5,11 +5,11 @@ Hackable FPGA based network tap based on the [ZedBoard](http://zedboard.org "Zed
 
 ## Requirements
 
-This project is designed for Vivado 2017.2. If you are using an older version of Vivado, then you *MUST* use an older version
+This project is designed for Vivado 2017.3. If you are using an older version of Vivado, then you *MUST* use an older version
 of this repository. Refer to the [list of commits](https://github.com/fpgadeveloper/ethernet-fmc-network-tap/commits/master "list of commits")
 to find links to the older versions of this repository.
 
-* Vivado 2017.2
+* Vivado 2017.3
 * [Ethernet FMC](http://ethernetfmc.com "Ethernet FMC")
 * One of the above listed evaluation boards
 
