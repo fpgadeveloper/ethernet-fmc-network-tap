@@ -1,5 +1,5 @@
 #
-# build.tcl: Tcl script for re-creating project 'zedboard_network_tap'
+# build.tcl: Tcl script for re-creating project 'zedboard_net_tap'
 #
 #*****************************************************************************************
 
@@ -17,7 +17,7 @@ if {![string equal $ver $version_required]} {
   return
 }
 
-set design_name zedboard_network_tap
+set design_name zedboard_net_tap
 
 # Set the reference directory for source file relative paths (by default the value is script directory path)
 set origin_dir "."
@@ -112,7 +112,7 @@ current_run -implementation [get_runs impl_1]
 puts "INFO: Project created:${design_name}"
 
 # Create block design
-source $origin_dir/src/bd/design_1.tcl
+source $origin_dir/src/bd/design_1-zynq.tcl
 
 # Generate the wrapper
 make_wrapper -files [get_files *${design_name}.bd] -top

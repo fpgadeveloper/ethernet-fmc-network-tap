@@ -3,6 +3,7 @@
 #include "platform.h"
 #include "xil_printf.h"
 #include "xemacps.h"
+#include "platform_config.h"
 
 #define XEMACPS_GMII2RGMII_SPEED1000_FD		0x140
 #define XEMACPS_GMII2RGMII_SPEED100_FD		0x2100
@@ -17,6 +18,18 @@
 #define SLCR_UNLOCK_KEY_VALUE	0xDF0D
 #define SLCR_ADDR_GEM_RST_CTRL	(XPS_SYS_CTRL_BASEADDR + 0x214)
 #define EMACPS_SLCR_DIV_MASK	0xFC0FC0FF
+
+// GEM_FOR_MDIO defines the GEM that is used for MDIO to configure 
+// the GMII-to-RGMII IPs and depends on the carrier board
+#if defined(PLATFORM_ZYNQ)
+#define GEM_FOR_MDIO XPAR_XEMACPS_1_BASEADDR
+#define GEM_FOR_LWIP XPAR_XEMACPS_0_BASEADDR
+#endif
+
+#if defined(PLATFORM_ZYNQMP)
+#define GEM_FOR_MDIO XPAR_XEMACPS_0_BASEADDR
+#define GEM_FOR_LWIP XPAR_XEMACPS_1_BASEADDR
+#endif
 
 extern XEmacPs_Config XEmacPs_ConfigTable[];
 

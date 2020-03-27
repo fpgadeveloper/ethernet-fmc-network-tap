@@ -132,12 +132,12 @@ int nettap_init()
   XEmacPs emacps;
 	signed int status;
 
-    xil_printf("Configuring GEM1 for Network Tap\n\r");
+    xil_printf("Configuring GEM for Network Tap\n\r");
 
     // Setup EMAC
-    status = nettap_init_emacps(&emacps,XPAR_PS7_ETHERNET_1_BASEADDR);
+    status = nettap_init_emacps(&emacps,GEM_FOR_MDIO);
 	if (status != XST_SUCCESS) {
-		xil_printf("EmacPs1 Configuration Failed\r\n");
+		xil_printf("EmacPs Configuration Failed\r\n");
 	}
 
 	// Set GMII-to-RGMII block link speed

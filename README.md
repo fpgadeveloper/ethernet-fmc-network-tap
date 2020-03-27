@@ -17,7 +17,7 @@ to find the version of this repository that matches your version of the tools.
 
 * Zynq-7000 [ZedBoard](http://zedboard.org "ZedBoard")
   * LPC connector
-* Zynq UltraScale+ [ZCU102 Evaluation board Rev 1.0](http://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html "ZCU102 Evaluation board Rev 1.0")
+* Zynq UltraScale+ [ZCU102 Evaluation board](http://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html "ZCU102 Evaluation board")
   * HPC0 connector
 
 ## Description
