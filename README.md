@@ -5,12 +5,12 @@ Hackable FPGA based network tap that uses the [Quad Gigabit Ethernet FMC](http:/
 
 ## Requirements
 
-This project is designed for version 2019.2 of the Xilinx tools (Vivado/Vitis/PetaLinux). If you are using an older version of the 
+This project is designed for version 2020.2 of the Xilinx tools (Vivado/Vitis/PetaLinux). If you are using an older version of the 
 Xilinx tools, then refer to the [release tags](https://github.com/fpgadeveloper/ethernet-fmc-network-tap/releases "releases")
 to find the version of this repository that matches your version of the tools.
 
-* Vivado 2019.2
-* Vitis 2019.2
+* Vivado 2020.2
+* Vitis 2020.2
 * [Ethernet FMC](http://ethernetfmc.com "Ethernet FMC")
 * One of the below listed evaluation boards
 

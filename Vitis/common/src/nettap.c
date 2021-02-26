@@ -1,6 +1,5 @@
 
 #include <stdio.h>
-#include "platform.h"
 #include "xil_printf.h"
 #include "xemacps.h"
 #include "nettap.h"
