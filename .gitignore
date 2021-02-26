@@ -2,3 +2,11 @@ Vivado/.Xil/
 Vivado/*.log
 Vivado/*.jou
 Vivado/*_net_tap/
+Vitis/*_echo_*/
+Vitis/*_net_tap_*/
+Vitis/.*/
+Vitis/.*
+Vitis/*.log
+Vitis/*.jou
+Vitis/boot/
+Vitis/embeddedsw/
