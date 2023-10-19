@@ -193,7 +193,5 @@ set_property UNAVAILABLE_DURING_CALIBRATION TRUE [get_ports rgmii_port_1_rxc]
 # "<prj_name>\<prj_name>.srcs\sources_1\bd\<prj_name>\ip\<prj_name>_zynq_ultra_ps_e_0_0\<prj_name>_zynq_ultra_ps_e_0_0.xdc"
 # The new clock causes Vivado to analyze some non-critical paths that it was not analyzing before, and it has difficulty achieving timing closure.
 # To prevent this problem, we declare false path from Clock wizard's 375MHz clock to the Zynq PS GEM's MDIO clock output
-set_false_path -from [get_clocks clk_out1_zcu102_hpc0_net_tap_clk_wiz_0_0] -to [get_clocks mdio0_mdc_clock]
-#set_false_path -from [get_clocks clk_out1_zcu102_hpc0_net_tap_clk_wiz_0_0] -to [get_clocks mdio1_mdc_clock]
-#set_false_path -from [get_clocks clk_out1_zcu102_hpc0_net_tap_clk_wiz_0_0] -to [get_clocks mdio2_mdc_clock]
-#set_false_path -from [get_clocks clk_out1_zcu102_hpc0_net_tap_clk_wiz_0_0] -to [get_clocks mdio3_mdc_clock]
+set_false_path -from [get_clocks clk_out1_net_tap_clk_wiz_0_0] -to [get_clocks mdio0_mdc_clock]
+

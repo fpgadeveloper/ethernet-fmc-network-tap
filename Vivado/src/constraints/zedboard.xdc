@@ -131,6 +131,11 @@ set_property PACKAGE_PIN L17 [get_ports {ref_clk_oe[0]}]
 set_property PACKAGE_PIN K19 [get_ports {ref_clk_fsel[0]}]
 #set_property PACKAGE_PIN A22 [get_ports reset_port_3]
 
+create_clock -period 8.000 -name net_tap_eth_mac_0_rgmii_rx_clk -waveform {0.000 4.000} [get_ports rgmii_port_0_rxc]
+create_clock -period 8.000 -name net_tap_eth_mac_1_rgmii_rx_clk -waveform {0.000 4.000} [get_ports rgmii_port_1_rxc]
 
-create_clock -period 8.000 -name design_1_eth_mac_0_rgmii_rx_clk -waveform {0.000 4.000} [get_ports rgmii_port_0_rxc]
-create_clock -period 8.000 -name design_1_eth_mac_1_rgmii_rx_clk -waveform {0.000 4.000} [get_ports rgmii_port_1_rxc]
+# For timing closure using the proper set_input_delay constraints
+set gmii_to_rgmii_0_iodelay [get_cells -hierarchical -filter { PRIMITIVE_TYPE == IO.IODELAY.IDELAYE2 && NAME =~  "*/gmii_to_rgmii_0/*delay_rgmii_rx*" } ] 
+set_property IDELAY_VALUE 13 $gmii_to_rgmii_0_iodelay
+set gmii_to_rgmii_1_iodelay [get_cells -hierarchical -filter { PRIMITIVE_TYPE == IO.IODELAY.IDELAYE2 && NAME =~  "*/gmii_to_rgmii_1/*delay_rgmii_rx*" } ] 
+set_property IDELAY_VALUE 13 $gmii_to_rgmii_1_iodelay

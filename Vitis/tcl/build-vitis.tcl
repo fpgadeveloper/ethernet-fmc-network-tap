@@ -2,8 +2,9 @@
 
 # Description
 # -----------
-# This Tcl script will create Vitis workspace with software applications for each of the
-# exported hardware designs in the ../Vivado directory.
+# This Tcl script will create Vitis workspace and add a software application for the specified
+# target design. If a target design is not specified, a software application will be added for 
+# each of the exported hardware designs in the ../Vivado directory.
 
 # Set the Vivado directories containing the Vivado projects
 set vivado_dirs_rel [list "../Vivado"]
@@ -18,7 +19,7 @@ foreach d $vivado_dirs_rel {
 set app_postfix "_echo_server"
 
 # Specify the postfix on the Vivado projects so that the workspace builder can find them
-set vivado_postfix "_net_tap"
+set vivado_postfix ""
 
 # Set the app template used to create the application
 set support_app "lwip_echo_server"
@@ -26,6 +27,21 @@ set template_app "lwIP Echo Server"
 
 # Microblaze designs: Generate combined .bit and .elf file
 set mb_combine_bit_elf 0
+
+# Possible targets (board name in lower case for the board.h file)
+dict set target_dict zcu102_hpc0 { zcu102 }
+dict set target_dict zedboard { zedboard }
+
+# Target can be specified by creating the target variable before sourcing, or in the arguments
+if { $argc >= 1 } {
+  set target [lindex $argv 0]
+  puts "Target for the build: $target"
+} elseif { [info exists target] && [dict exists $target_dict $target] } {
+  puts "Target for the build: $target"
+} else {
+  puts "No target specified, or invalid target."
+  set target ""
+}
 
 # Modify the "main.c" file of the echo server app
 proc modify_echo_server {app_name} {

@@ -1,24 +1,25 @@
-ethernet-fmc-network-tap
-========================
+# Network Tap for the Ethernet FMC
 
 Hackable FPGA based network tap that uses the [Quad Gigabit Ethernet FMC](http://ethernetfmc.com "Ethernet FMC").
 
+![Zedboard and Ethernet FMC Network Tap](docs/source/images/network-tap-concept.jpg "FPGA Network Tap")
+
 ## Requirements
 
-This project is designed for version 2020.2 of the Xilinx tools (Vivado/Vitis/PetaLinux). If you are using an older version of the 
-Xilinx tools, then refer to the [release tags](https://github.com/fpgadeveloper/ethernet-fmc-network-tap/releases "releases")
+This project is designed for version 2022.1 of the Xilinx tools (Vivado/Vitis). If you are using an older version of the 
+Xilinx tools, then refer to the [release tags](https://github.com/fpgadeveloper/ethernet-fmc-network-tap/tags "releases")
 to find the version of this repository that matches your version of the tools.
 
-* Vivado 2020.2
-* Vitis 2020.2
-* [Ethernet FMC](http://ethernetfmc.com "Ethernet FMC")
+* Vivado 2022.1
+* Vitis 2022.1
+* [Ethernet FMC](https://ethernetfmc.com "Ethernet FMC")
 * One of the below listed evaluation boards
 
-## Supported boards
+## Supported carrier boards
 
 * Zynq-7000 [ZedBoard](http://zedboard.org "ZedBoard")
   * LPC connector
-* Zynq UltraScale+ [ZCU102 Evaluation board](http://www.xilinx.com/products/silicon-devices/soc/zynq-ultrascale-mpsoc.html "ZCU102 Evaluation board")
+* Zynq UltraScale+ [ZCU102 Evaluation board](https://www.xilinx.com/zcu102 "ZCU102 Evaluation board")
   * HPC0 connector
 
 ## Description
@@ -26,7 +27,7 @@ to find the version of this repository that matches your version of the tools.
 This project will implement an FPGA based network tap which could be used to "listen" to the communications passing over
 an Ethernet cable. It is a work that is still under development.
 
-![Block diagram](http://www.fpgadeveloper.com/wp-content/uploads/2015/12/fpga_network_tap_4.jpg "FPGA Network Tap")
+![Block diagram](docs/source/images/network-tap-pass-through.jpg "FPGA Network Tap")
 
 The design in it's present state implements a pass-through between PORT0 and PORT1 of the Ethernet FMC.
 The pass-through is fully functional and can be tested by connecting ports 0 and 1 to separate Ethernet
@@ -51,7 +52,7 @@ To use the sources in this repository, please follow these steps:
    In the window that opens, tick "Include bitstream" and "Local to project".
 7. Return to Windows Explorer and browse to the Vitis directory in the repo.
 8. Double click the `build-vitis.bat` batch file. The batch file will run the
-   `build-vitis.tcl` script and build the Vitis workspace containing the hardware
+   `tcl/build-vitis.tcl` script and build the Vitis workspace containing the hardware
    design and the software application.
 9. Run Xilinx Vitis and select the workspace to be the Vitis directory of the repo.
 10. Connect and power up the hardware.
@@ -61,28 +62,32 @@ To use the sources in this repository, please follow these steps:
 
 ### Linux users
 
-1. Download the repo as a zip file and extract the files to a directory
-   on your hard drive --OR-- Git users: clone the repo to your hard drive
-2. Launch the Vivado GUI.
-3. Open the Tcl console from the Vivado welcome page. In the console, `cd` to the repo files
-   on your hard drive and into the Vivado subdirectory. For example: `cd /media/projects/ethernet-fmc-network-tap/Vivado`.
-3. In the Vivado subdirectory, you will find multiple Tcl files. To list them, type `exec ls {*}[glob *.tcl]`.
-   Determine the Tcl script for the example project that you would like to generate (for example: `build-zedboard.tcl`), 
-   then `source` the script in the Tcl console: For example: `source build-zedboard.tcl`
-4. Vivado will run the script and generate the project. When it's finished, click Generate bitstream.
-5. When the bitstream is successfully generated, select `File->Export->Export Hardware`.
-   In the window that opens, tick "Include bitstream" and "Local to project".
-6. To build the Vitis workspace, open a Linux command terminal and `cd` to the Vitis directory in the repo.
-7. The Vitis directory contains the `build-vitis.tcl` script that will build the Vitis workspace containing the hardware design and
-   the software application. Run the build script by typing the following command: 
-   `<path-of-xilinx-vitis>/bin/xsct build-vitis.tcl`. Note that you must replace `<path-of-xilinx-vitis>` with the 
-   actual path to your Xilinx Vitis installation.
-8. Run Xilinx Vitis and select the workspace to be the Vitis subdirectory of the 
-   repo.
-9. Connect and power up the hardware.
-10. Open a Putty terminal to view the UART output.
-11. In Vitis, select `Xilinx Tools->Program FPGA`.
-12. Right-click on the application and select `Run As->Launch on Hardware (Single Application Debug)`
+1. Open a command terminal and launch the setup script for Vivado and Vitis:
+   ```
+   source <path-to-vivado-install>/2022.1/settings64.sh
+   source <path-to-vitis-install>/2022.1/settings64.sh
+   ```
+2. Clone the Git repository and `cd` into the repo:
+   ```
+   git clone https://github.com/fpgadeveloper/ethernet-fmc-network-tap.git
+   cd ethernet-fmc-network-tap
+   ```
+3. Run make to build the Vivado project and the Vitis workspace for the target board. You must replace 
+   `<target>` with a valid target:
+   ```
+   make bootimage TARGET=<target>
+   ```
+   Valid targets are: 
+   `zedboard`,`zcu102_hpc0`.
+4. Launch the Vitis GUI. When asked to select the workspace path, select the `Vitis` directory of the 
+   project repository.
+5. Power up your hardware platform and ensure that the JTAG is connected properly.
+6. In the Vitis Explorer panel, double-click on the System project that you want to run -
+   this will reveal the application contained in the project. The System project will have 
+   the postfix "_system".
+7. Now right click on the application (it should have the postfix "_echo_server") then navigate the
+   drop down menu to **Run As->Launch on Hardware (Single Application Debug (GDB)).**.
+
 
 ## Tutorials
 

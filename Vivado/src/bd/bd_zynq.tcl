@@ -1,5 +1,5 @@
 ################################################################
-# Block diagram build script for Zynq MP designs
+# Block diagram build script
 ################################################################
 
 # CHECKING IF PROJECT EXISTS
@@ -11,9 +11,9 @@ if { [get_projects -quiet] eq "" } {
 set cur_design [current_bd_design -quiet]
 set list_cells [get_bd_cells -quiet]
 
-create_bd_design $design_name
+create_bd_design $block_name
 
-current_bd_design $design_name
+current_bd_design $block_name
 
 set parentCell [get_bd_cells /]
 
@@ -38,34 +38,29 @@ set oldCurInst [current_bd_instance .]
 current_bd_instance $parentObj
 
 # Add the Processor System and apply board preset
-create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e zynq_ultra_ps_e_0
-apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e -config {apply_board_preset "1" }  [get_bd_cells zynq_ultra_ps_e_0]
+create_bd_cell -type ip -vlnv xilinx.com:ip:processing_system7 processing_system7_0
+apply_bd_automation -rule xilinx.com:bd_rule:processing_system7 -config {make_external "FIXED_IO, DDR" apply_board_preset "1" Master "Disable" Slave "Disable" }  [get_bd_cells processing_system7_0]
 
-# Disable all of the GP ports
-set_property -dict [list CONFIG.PSU__USE__M_AXI_GP0 {0} \
-CONFIG.PSU__USE__M_AXI_GP1 {0} \
-CONFIG.PSU__USE__M_AXI_GP2 {0}] [get_bd_cells zynq_ultra_ps_e_0]
+# Configure the PS: Generate 200MHz clock, Enable ETH1 for EMIO
+set_property -dict [list CONFIG.PCW_FPGA1_PERIPHERAL_FREQMHZ {200} CONFIG.PCW_EN_CLK1_PORT {1} CONFIG.PCW_QSPI_GRP_SINGLE_SS_ENABLE {1} CONFIG.PCW_ENET1_PERIPHERAL_ENABLE {1} CONFIG.PCW_ENET1_GRP_MDIO_ENABLE {1}] [get_bd_cells processing_system7_0]
 
-# Configure the PS: Enable GEM0 for EMIO, GEM3 for MIO (on-board Ethernet)
-set_property -dict [list CONFIG.PSU__ENET0__GRP_MDIO__ENABLE {1} \
-CONFIG.PSU__ENET0__GRP_MDIO__IO {EMIO} \
-CONFIG.PSU__ENET0__PERIPHERAL__ENABLE {1} \
-CONFIG.PSU__ENET0__PERIPHERAL__IO {EMIO}] [get_bd_cells zynq_ultra_ps_e_0]
+# Connect the FCLK_CLK0 to the PS GP0
+connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK0] [get_bd_pins processing_system7_0/M_AXI_GP0_ACLK]
 
 # Add the NOT gate for reset signal
 create_bd_cell -type ip -vlnv xilinx.com:ip:util_vector_logic util_vector_logic_0
 set_property -dict [list CONFIG.C_SIZE {1} CONFIG.C_OPERATION {not}] [get_bd_cells util_vector_logic_0]
-connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins util_vector_logic_0/Op1]
+connect_bd_net [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins util_vector_logic_0/Op1]
 
 # Add the GMII-to-RGMIIs
 create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii gmii_to_rgmii_0
 create_bd_cell -type ip -vlnv xilinx.com:ip:gmii_to_rgmii gmii_to_rgmii_1
 
 # GMII-to-RGMII0 set with PHY address 7 and shared logic
-set_property -dict [list CONFIG.C_USE_IDELAY_CTRL {true} CONFIG.C_PHYADDR {7} CONFIG.SupportLevel {Include_Shared_Logic_in_Core}] [get_bd_cells gmii_to_rgmii_0]
+set_property -dict [list CONFIG.C_PHYADDR {7} CONFIG.SupportLevel {Include_Shared_Logic_in_Core}] [get_bd_cells gmii_to_rgmii_0]
 # GMII-to-RGMII1 set with PHY address 8 and no shared logic, no IDELAY_CTRL
 set_property -dict [list CONFIG.C_PHYADDR {8} CONFIG.C_USE_IDELAY_CTRL {false}] [get_bd_cells gmii_to_rgmii_1]
-connect_bd_intf_net [get_bd_intf_pins zynq_ultra_ps_e_0/MDIO_ENET0] [get_bd_intf_pins gmii_to_rgmii_1/MDIO_GEM]
+connect_bd_intf_net [get_bd_intf_pins processing_system7_0/MDIO_ETHERNET_1] [get_bd_intf_pins gmii_to_rgmii_1/MDIO_GEM]
 connect_bd_intf_net [get_bd_intf_pins gmii_to_rgmii_1/MDIO_PHY] [get_bd_intf_pins gmii_to_rgmii_0/MDIO_GEM]
 
 # Make GMII-to-RGMII ports external: RGMII and RESET
@@ -78,54 +73,27 @@ connect_bd_intf_net [get_bd_intf_pins gmii_to_rgmii_1/RGMII] [get_bd_intf_ports 
 # PHY RESETs
 create_bd_cell -type ip -vlnv xilinx.com:ip:util_reduced_logic util_reduced_logic_0
 set_property -dict [list CONFIG.C_SIZE {1}] [get_bd_cells util_reduced_logic_0]
-connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins util_reduced_logic_0/Op1]
+connect_bd_net [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins util_reduced_logic_0/Op1]
 create_bd_port -dir O reset_port_0
 connect_bd_net [get_bd_pins /util_reduced_logic_0/Res] [get_bd_ports reset_port_0]
 
 create_bd_cell -type ip -vlnv xilinx.com:ip:util_reduced_logic util_reduced_logic_1
 set_property -dict [list CONFIG.C_SIZE {1}] [get_bd_cells util_reduced_logic_1]
-connect_bd_net [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] [get_bd_pins util_reduced_logic_1/Op1]
+connect_bd_net [get_bd_pins processing_system7_0/FCLK_RESET0_N] [get_bd_pins util_reduced_logic_1/Op1]
 create_bd_port -dir O reset_port_1
 connect_bd_net [get_bd_pins /util_reduced_logic_1/Res] [get_bd_ports reset_port_1]
 
-# Connect the clocks
+# Connect clocks
+
 connect_bd_net [get_bd_pins gmii_to_rgmii_0/ref_clk_out] [get_bd_pins gmii_to_rgmii_1/ref_clk_in]
 connect_bd_net [get_bd_pins gmii_to_rgmii_0/mmcm_locked_out] [get_bd_pins gmii_to_rgmii_1/mmcm_locked_in]
 connect_bd_net [get_bd_pins gmii_to_rgmii_0/gmii_clk_125m_out] [get_bd_pins gmii_to_rgmii_1/gmii_clk_125m_in]
 connect_bd_net [get_bd_pins gmii_to_rgmii_0/gmii_clk_25m_out] [get_bd_pins gmii_to_rgmii_1/gmii_clk_25m_in]
 connect_bd_net [get_bd_pins gmii_to_rgmii_0/gmii_clk_2_5m_out] [get_bd_pins gmii_to_rgmii_1/gmii_clk_2_5m_in]
 
-# Create clock wizard for the 375MHz clock
+# Connect 200MHz GMII-to-RGMII clkin
 
-create_bd_cell -type ip -vlnv xilinx.com:ip:clk_wiz clk_wiz_0
-set_property -dict [list CONFIG.PRIM_IN_FREQ.VALUE_SRC USER] [get_bd_cells clk_wiz_0]
-set_property -dict [list CONFIG.PRIM_SOURCE {Differential_clock_capable_pin} \
-CONFIG.PRIM_IN_FREQ {125} \
-CONFIG.CLKOUT1_REQUESTED_OUT_FREQ {375} \
-CONFIG.USE_LOCKED {false} \
-CONFIG.USE_RESET {false} \
-CONFIG.CLKIN1_JITTER_PS {80.0} \
-CONFIG.MMCM_DIVCLK_DIVIDE {1} \
-CONFIG.MMCM_CLKFBOUT_MULT_F {9.750} \
-CONFIG.MMCM_CLKOUT0_DIVIDE_F {3.250} \
-CONFIG.CLKOUT1_JITTER {86.562} \
-CONFIG.CLKOUT1_PHASE_ERROR {84.521}] [get_bd_cells clk_wiz_0]
-
-connect_bd_net [get_bd_pins clk_wiz_0/clk_out1] [get_bd_pins gmii_to_rgmii_0/clkin]
-
-# Connect ports for the Ethernet FMC 125MHz clock
-create_bd_intf_port -mode Slave -vlnv xilinx.com:interface:diff_clock_rtl:1.0 ref_clk
-set_property -dict [list CONFIG.FREQ_HZ {125000000}] [get_bd_intf_ports ref_clk]
-connect_bd_intf_net [get_bd_intf_ports ref_clk] [get_bd_intf_pins clk_wiz_0/CLK_IN1_D]
-
-# Create Ethernet FMC reference clock output enable and frequency select
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant ref_clk_oe
-create_bd_port -dir O -from 0 -to 0 ref_clk_oe
-connect_bd_net [get_bd_pins /ref_clk_oe/dout] [get_bd_ports ref_clk_oe]
-
-create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant ref_clk_fsel
-create_bd_port -dir O -from 0 -to 0 ref_clk_fsel
-connect_bd_net [get_bd_pins /ref_clk_fsel/dout] [get_bd_ports ref_clk_fsel]
+connect_bd_net [get_bd_pins processing_system7_0/FCLK_CLK1] [get_bd_pins gmii_to_rgmii_0/clkin]
 
 # Connect GMII-to-RGMII resets
 
@@ -133,6 +101,16 @@ connect_bd_net [get_bd_pins util_vector_logic_0/Res] [get_bd_pins gmii_to_rgmii_
 connect_bd_net [get_bd_pins gmii_to_rgmii_0/rx_reset] [get_bd_pins util_vector_logic_0/Res]
 connect_bd_net [get_bd_pins gmii_to_rgmii_1/tx_reset] [get_bd_pins util_vector_logic_0/Res]
 connect_bd_net [get_bd_pins gmii_to_rgmii_1/rx_reset] [get_bd_pins util_vector_logic_0/Res]
+
+# Create Ethernet FMC reference clock output enable and frequency select
+
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant ref_clk_oe
+create_bd_port -dir O -from 0 -to 0 ref_clk_oe
+connect_bd_net [get_bd_pins /ref_clk_oe/dout] [get_bd_ports ref_clk_oe]
+
+create_bd_cell -type ip -vlnv xilinx.com:ip:xlconstant ref_clk_fsel
+create_bd_port -dir O -from 0 -to 0 ref_clk_fsel
+connect_bd_net [get_bd_pins /ref_clk_fsel/dout] [get_bd_ports ref_clk_fsel]
 
 # FIFOs for GMII loopback
 create_bd_cell -type ip -vlnv xilinx.com:ip:fifo_generator fifo_generator_0
