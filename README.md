@@ -42,23 +42,20 @@ To use the sources in this repository, please follow these steps:
 1. Download the repo as a zip file and extract the files to a directory
    on your hard drive --OR-- Git users: clone the repo to your hard drive
 2. Open Windows Explorer, browse to the repo files on your hard drive.
-3. In the Vivado directory, you will find multiple batch files (*.bat).
-   Double click on the batch file that is appropriate to your hardware,
-   for example, double-click `build-zedboard.bat` if you are using the ZedBoard.
-   This will generate a Vivado project for your hardware platform.
+3. In the `Vivado` directory, double click on the `build-vivado.bat` batch file.
+   You will be prompted to select a target design to build. You will find the project in
+   the folder `Vivado/<target>`.
 4. Run Vivado and open the project that was just created.
 5. Click Generate bitstream.
 6. When the bitstream is successfully generated, select `File->Export->Export Hardware`.
    In the window that opens, tick "Include bitstream" and "Local to project".
 7. Return to Windows Explorer and browse to the Vitis directory in the repo.
-8. Double click the `build-vitis.bat` batch file. The batch file will run the
-   `tcl/build-vitis.tcl` script and build the Vitis workspace containing the hardware
-   design and the software application.
-9. Run Xilinx Vitis and select the workspace to be the Vitis directory of the repo.
+8. Double click the `build-vitis.bat` batch file. You will be prompted to select the
+   target design. The Vitis workspace will be found in the `<target>_workspace` folder.
+9. Run Xilinx Vitis and select the workspace folder that was just created.
 10. Connect and power up the hardware.
 11. Open a Putty terminal to view the UART output.
-12. In Vitis, select `Xilinx Tools->Program FPGA`.
-13. Right-click on the application and select `Run As->Launch on Hardware (Single Application Debug)`
+12. Right-click on the application and select `Run As->Launch on Hardware (Single Application Debug)`
 
 ### Linux users
 
@@ -79,13 +76,12 @@ To use the sources in this repository, please follow these steps:
    ```
    Valid targets are: 
    `zedboard`,`zcu102_hpc0`.
-4. Launch the Vitis GUI. When asked to select the workspace path, select the `Vitis` directory of the 
-   project repository.
+4. Launch the Vitis GUI. When asked to select the workspace path, select the `Vitis/<target>_workspace` directory.
 5. Power up your hardware platform and ensure that the JTAG is connected properly.
 6. In the Vitis Explorer panel, double-click on the System project that you want to run -
    this will reveal the application contained in the project. The System project will have 
    the postfix "_system".
-7. Now right click on the application (it should have the postfix "_echo_server") then navigate the
+7. Now right click on the application "echo_server" then navigate the
    drop down menu to **Run As->Launch on Hardware (Single Application Debug (GDB)).**.
 
 

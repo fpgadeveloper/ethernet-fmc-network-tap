@@ -2,11 +2,10 @@ RemoteSystemsTempFiles/
 Vivado/.Xil/
 *.log
 *.jou
-Vi*/zedboard/
-Vi*/zcu102*/
-Vitis/*_echo_*/
+Vivado/zedboard/
+Vivado/zcu102*/
 Vitis/.*/
 Vitis/.*
 Vitis/boot/
-Vitis/embeddedsw/
+Vitis/*_workspace/
 bootimages/
