@@ -1,18 +1,18 @@
 # Network Tap for the Ethernet FMC
 
-Hackable FPGA based network tap that uses the [Quad Gigabit Ethernet FMC](http://ethernetfmc.com "Ethernet FMC").
+Hackable FPGA based network tap that uses the Opsero [Ethernet FMC] (OP031) or [Robust Ethernet FMC] (OP041).
 
 ![Zedboard and Ethernet FMC Network Tap](docs/source/images/network-tap-concept.jpg "FPGA Network Tap")
 
 ## Requirements
 
-This project is designed for version 2022.1 of the Xilinx tools (Vivado/Vitis). If you are using an older version of the 
+This project is designed for version 2024.1 of the Xilinx tools (Vivado/Vitis). If you are using an older version of the 
 Xilinx tools, then refer to the [release tags](https://github.com/fpgadeveloper/ethernet-fmc-network-tap/tags "releases")
 to find the version of this repository that matches your version of the tools.
 
-* Vivado 2022.1
-* Vitis 2022.1
-* [Ethernet FMC](https://ethernetfmc.com "Ethernet FMC")
+* Vivado 2024.1
+* Vitis 2024.1
+* [Ethernet FMC] or [Robust Ethernet FMC]
 * One of the below listed evaluation boards
 
 ## Supported carrier boards
@@ -61,8 +61,8 @@ To use the sources in this repository, please follow these steps:
 
 1. Open a command terminal and launch the setup script for Vivado and Vitis:
    ```
-   source <path-to-vivado-install>/2022.1/settings64.sh
-   source <path-to-vitis-install>/2022.1/settings64.sh
+   source <path-to-vivado-install>/2024.1/settings64.sh
+   source <path-to-vitis-install>/2024.1/settings64.sh
    ```
 2. Clone the Git repository and `cd` into the repo:
    ```
@@ -133,3 +133,6 @@ This project was developed by [Opsero Inc.](http://opsero.com "Opsero Inc."),
 a tight-knit team of FPGA experts delivering FPGA products and design services to start-ups and tech companies. 
 Follow our blog, [FPGA Developer](http://www.fpgadeveloper.com "FPGA Developer"), for news, tutorials and
 updates on the awesome projects we work on.
+
+[Ethernet FMC]: https://ethernetfmc.com/docs/ethernet-fmc/overview/
+[Robust Ethernet FMC]: https://ethernetfmc.com/docs/robust-ethernet-fmc/overview/
