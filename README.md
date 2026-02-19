@@ -6,12 +6,12 @@ Hackable FPGA based network tap that uses the Opsero [Ethernet FMC] (OP031) or [
 
 ## Requirements
 
-This project is designed for version 2024.1 of the Xilinx tools (Vivado/Vitis). If you are using an older version of the 
+This project is designed for version 2025.2 of the Xilinx tools (Vivado/Vitis). If you are using an older version of the 
 Xilinx tools, then refer to the [release tags](https://github.com/fpgadeveloper/ethernet-fmc-network-tap/tags "releases")
 to find the version of this repository that matches your version of the tools.
 
-* Vivado 2024.1
-* Vitis 2024.1
+* Vivado 2025.2
+* Vitis 2025.2
 * [Ethernet FMC] or [Robust Ethernet FMC]
 * One of the below listed evaluation boards
 
@@ -61,8 +61,8 @@ To use the sources in this repository, please follow these steps:
 
 1. Open a command terminal and launch the setup script for Vivado and Vitis:
    ```
-   source <path-to-vivado-install>/2024.1/settings64.sh
-   source <path-to-vitis-install>/2024.1/settings64.sh
+   source <path-to-vivado-install>/2025.2/settings64.sh
+   source <path-to-vitis-install>/2025.2/settings64.sh
    ```
 2. Clone the Git repository and `cd` into the repo:
    ```
