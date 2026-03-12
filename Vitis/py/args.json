@@ -25,5 +25,6 @@
         "zcu102_hpc0": "zcu102",
         "zedboard": "zedboard"
     },
+    "pre_platform_build_script": "py/pre_platform_build.py",
     "combine_bit_elf": false
 }
