@@ -4,16 +4,17 @@
 
 RM = rm -rf
 ROOT_DIR = $(shell pwd)
-BD_NAME = net_tap
-
 # defaults
 .DEFAULT_GOAL := bootimage
 TARGET ?= none
 JOBS ?= 8
 
 # valid targets (template name, both (plnx+baremetal) or baremetal_only)
+# UPDATER START
+BD_NAME = net_tap
 zedboard_target := zynq baremetal_only
 zcu102_hpc0_target := zynqMP baremetal_only
+# UPDATER END
 
 TARGET_LIST := $(sort $(patsubst %_target,%,$(filter %_target,$(.VARIABLES))))
 

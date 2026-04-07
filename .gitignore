@@ -3,8 +3,10 @@ Vivado/.Xil/
 Vivado/logs/
 *.log
 *.jou
+# UPDATER START
 Vivado/zedboard/
-Vivado/zcu102*/
+Vivado/zcu102_hpc0/
+# UPDATER END
 Vitis/.*/
 Vitis/.*
 Vitis/boot/

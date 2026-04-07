@@ -6,7 +6,6 @@ CP = cp -rf
 MKDIR = mkdir -p
 RM = rm -rf
 ROOT_DIR = $(shell pwd)
-BD_NAME = net_tap
 ARGS_JSON = py/args.json
 DATA_JSON = none
 
@@ -17,8 +16,11 @@ JOBS ?= 8
 
 # valid targets
 # UPDATER START
-zcu102_hpc0_target := zynqMP
+BD_NAME = net_tap
+APP_NAME = echo_server
+COMBINE_BIT_ELF = false
 zedboard_target := zynq
+zcu102_hpc0_target := zynqMP
 # UPDATER END
 
 TARGET_LIST := $(sort $(patsubst %_target,%,$(filter %_target,$(.VARIABLES))))

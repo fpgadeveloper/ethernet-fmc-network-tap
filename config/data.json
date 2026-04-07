@@ -1,0 +1,49 @@
+{
+  "bd_name": "net_tap",
+  "groups": [
+    {
+      "label": "z7",
+      "name": "Zynq-7000"
+    },
+    {
+      "label": "zu",
+      "name": "Zynq UltraScale+"
+    }
+  ],
+  "designs": [
+    {
+      "publish": true,
+      "label": "zedboard",
+      "board": "ZedBoard",
+      "link": "http://zedboard.org",
+      "url": "avnet.com",
+      "boardname": "zedboard",
+      "bdscript": "zynq",
+      "lanecfg": "rgmii-0123",
+      "connector": "LPC",
+      "group": "z7",
+      "petalinux": false,
+      "baremetal": true,
+      "license": false,
+      "flashsize": "0",
+      "flashintf": "0"
+    },
+    {
+      "publish": true,
+      "label": "zcu102_hpc0",
+      "board": "ZCU102",
+      "link": "https://www.xilinx.com/zcu102",
+      "url": "xilinx.com",
+      "boardname": "zcu102",
+      "bdscript": "zynqmp",
+      "lanecfg": "rgmii-0123-zcu10x",
+      "connector": "HPC0",
+      "group": "zu",
+      "petalinux": false,
+      "baremetal": true,
+      "license": false,
+      "flashsize": "0",
+      "flashintf": "0"
+    }
+  ]
+}

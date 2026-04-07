@@ -7,16 +7,17 @@ MKDIR = mkdir -p
 RM = rm -rf
 ROOT_DIR = $(shell pwd)
 VIVADO = $(XILINX_VIVADO)/bin/vivado
-BD_NAME = net_tap
-
 # defaults
 .DEFAULT_GOAL := xsa
 TARGET ?= none
 JOBS ?= 8
 
 # valid targets
+# UPDATER START
+BD_NAME = net_tap
 zedboard_target := 0
 zcu102_hpc0_target := 0
+# UPDATER END
 
 TARGET_LIST := $(sort $(patsubst %_target,%,$(filter %_target,$(.VARIABLES))))
 
