@@ -1,5 +1,6 @@
 {
   "bd_name": "net_tap",
+  "prj_name": "ethernet-fmc-network-tap",
   "groups": [
     {
       "label": "z7",
