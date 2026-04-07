@@ -60,7 +60,7 @@ help:
 	@echo '    Create the Vitis workspace and add applications for specified target.'
 	@echo ''
 	@echo '  make all JOBS=<val>'
-	@echo '    Create the Vitis workspace and add applications for all targets.'
+	@echo '    Create the Vitis workspace, build, and generate boot files for all targets.'
 	@echo ''
 	@echo '  make bootfile TARGET=<target>'
 	@echo '    Generate a boot image for the specified target (bit or BOOT.BIN).'
@@ -69,7 +69,7 @@ help:
 	@echo '    Delete the Vitis workspace and all applications for specified target.'
 	@echo ''
 	@echo '  make clean_all'
-	@echo '    Delete all Vitis workspaces and all applications.'
+	@echo '    Delete all Vitis workspaces, boot files, and build artifacts.'
 	@echo ''
 	@echo 'Parameters:'
 	@echo ''
@@ -146,6 +146,7 @@ bootfile_locked:
 .PHONY: clean
 clean: check_target
 	$(RM) $(TARGET)_workspace
+	$(RM) $(VIT_BOOT_TARG)
 
 .PHONY: clean_all
 clean_all:
