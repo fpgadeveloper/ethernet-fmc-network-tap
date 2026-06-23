@@ -35,55 +35,61 @@ devices.
 
 ## Build instructions
 
-To use the sources in this repository, please follow these steps:
+Clone the repo and change into its directory:
+```
+git clone https://github.com/fpgadeveloper/ethernet-fmc-network-tap.git
+cd ethernet-fmc-network-tap
+```
 
-### Windows users
+### Cross-platform build runner
 
-1. Download the repo as a zip file and extract the files to a directory
-   on your hard drive --OR-- Git users: clone the repo to your hard drive
-2. Open Windows Explorer, browse to the repo files on your hard drive.
-3. In the `Vivado` directory, double click on the `build-vivado.bat` batch file.
-   You will be prompted to select a target design to build. You will find the project in
-   the folder `Vivado/<target>`.
-4. Run Vivado and open the project that was just created.
-5. Click Generate bitstream.
-6. When the bitstream is successfully generated, select `File->Export->Export Hardware`.
-   In the window that opens, tick "Include bitstream" and "Local to project".
-7. Return to Windows Explorer and browse to the Vitis directory in the repo.
-8. Double click the `build-vitis.bat` batch file. You will be prompted to select the
-   target design. The Vitis workspace will be found in the `<target>_workspace` folder.
-9. Run Xilinx Vitis and select the workspace folder that was just created.
-10. Connect and power up the hardware.
-11. Open a Putty terminal to view the UART output.
-12. Right-click on the application and select `Run As->Launch on Hardware (Single Application Debug)`
+All builds are driven by `build.py` at the repo root, on both Windows
+(git bash) and Linux. The `build.sh` / `build.bat` shim finds a suitable
+Python 3 automatically (including the one bundled with the AMD tools).
+Pick a target design label from the tables above (or run `./build.sh
+list`), then run the build command for the stage(s) you want — each
+command builds whatever it depends on automatically and skips anything
+already built. On Windows without git bash, run the same commands from
+Command Prompt or PowerShell using `build.bat` (e.g. `build.bat xsa
+--target <target>`).
 
-### Linux users
+You don't need to source the AMD tools first — the build runner finds
+Vivado, Vitis and PetaLinux automatically in their standard install
+locations and sets up the environment each stage needs. If your tools
+are installed somewhere non-standard and the runner can't find them,
+source the tool settings yourself before running the build.
 
-1. Open a command terminal and launch the setup script for Vivado and Vitis:
-   ```
-   source <path-to-xilinx-tools>/2025.2/Vivado/settings64.sh
-   source <path-to-xilinx-tools>/2025.2/Vitis/settings64.sh
-   ```
-2. Clone the Git repository and `cd` into the repo:
-   ```
-   git clone https://github.com/fpgadeveloper/ethernet-fmc-network-tap.git
-   cd ethernet-fmc-network-tap
-   ```
-3. Run make to build the Vivado project and the Vitis workspace for the target board. You must replace 
-   `<target>` with a valid target:
-   ```
-   make bootimage TARGET=<target>
-   ```
-   Valid targets are: 
-   `zedboard`,`zcu102_hpc0`.
-4. Launch the Vitis GUI. When asked to select the workspace path, select the `Vitis/<target>_workspace` directory.
-5. Power up your hardware platform and ensure that the JTAG is connected properly.
-6. In the Vitis Explorer panel, double-click on the System project that you want to run -
-   this will reveal the application contained in the project. The System project will have 
-   the postfix "_system".
-7. Now right click on the application "echo_server" then navigate the
-   drop down menu to **Run As->Launch on Hardware (Single Application Debug (GDB)).**.
+#### Build the Vivado project (bitstream + XSA)
 
+```
+./build.sh xsa --target <target>
+```
+
+#### Build the standalone application
+
+Builds the Vitis workspace and the baremetal boot file (`BOOT.BIN` or
+bit file, depending on the device family):
+
+```
+./build.sh standalone --target <target>
+```
+
+#### Build everything
+
+Builds all of the above that the target supports, then gathers the boot
+images into `bootimages/*.zip`:
+
+```
+./build.sh all --target <target>
+./build.sh all --target all          # every target in the repo
+```
+
+Also available: `status`, `clean`, `project` — see
+`./build.sh --help`. On Windows, the PetaLinux and Yocto stages require a
+Linux machine; the runner says so and prints the hand-off command. The
+legacy `make` interface still works on Linux (each Makefile now wraps
+`build.sh`) but is deprecated and will be removed at the next version
+update.
 
 ## Tutorials
 

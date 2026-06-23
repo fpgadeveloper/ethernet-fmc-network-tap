@@ -26,6 +26,7 @@
       "petalinux": false,
       "baremetal": true,
       "license": false,
+      "ip_license": true,
       "flashsize": "0",
       "flashintf": "0"
     },
@@ -43,6 +44,7 @@
       "petalinux": false,
       "baremetal": true,
       "license": false,
+      "ip_license": true,
       "flashsize": "0",
       "flashintf": "0"
     }
