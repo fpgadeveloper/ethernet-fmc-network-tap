@@ -219,7 +219,10 @@ def make_mb_bit(impl_dir, bd_name, elf_path, mb_proc_name, out_bit, combine,
         die(f"Could not find bit in '{impl_dir}' (expected {bd_name}_wrapper.bit or {bd_name}.bit)")
     if combine:
         if not mmi:
-            mmi = mmi_from_xsa(xsa_path, bd_name, os.path.dirname(out_bit))
+            # Into a scratch dir, not the boot dir: the boot dir is what the
+            # standalone zip ships and the .mmi is not a deliverable.
+            import tempfile
+            mmi = mmi_from_xsa(xsa_path, bd_name, tempfile.mkdtemp(prefix="mmi-"))
         if not mmi:
             die(f"Could not find MMI in '{impl_dir}' or inside the XSA "
                 f"(expected {bd_name}_wrapper.mmi or {bd_name}.mmi)")
