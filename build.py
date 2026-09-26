@@ -1270,10 +1270,14 @@ def keep_boot_plan(ctx: Context):
 
     if ctx.viv_prj.is_dir() or any(p.exists() for p in ip_output_paths(ctx)):
         if ctx.xsa.is_file():
-            # The debug-probe file (.ltx) is tiny and is what an ILA session
-            # on the kept device image needs, so it stays next to it.
+            # Two small companions of the device image stay with it: the
+            # debug-probe file (.ltx) an ILA session needs, and the memory-map
+            # info (.mmi) that make-boot.py's updatemem step needs to embed a
+            # MicroBlaze ELF in the bitstream (it also lives inside the XSA,
+            # which make-boot falls back to, but keeping it is free).
             keep = [ctx.xsa, ctx.dev_image, ctx.cfgmem_mcs, ctx.cfgmem_prm]
-            keep += list(ctx.impl_dir.glob("*.ltx")) if ctx.impl_dir.is_dir() else []
+            if ctx.impl_dir.is_dir():
+                keep += list(ctx.impl_dir.glob("*.ltx")) + list(ctx.impl_dir.glob("*.mmi"))
             paths += prune_paths(ctx.viv_prj, keep)
             paths += [p for p in ip_output_paths(ctx) if p.exists()]
         else:
